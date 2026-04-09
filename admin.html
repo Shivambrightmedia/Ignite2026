@@ -46,6 +46,7 @@
             margin-bottom: 8px;
             background: linear-gradient(45deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
@@ -66,7 +67,7 @@
             color: var(--text-dim);
         }
 
-        select, input {
+        input {
             width: 100%;
             padding: 12px 16px;
             background: #25252b;
@@ -78,7 +79,7 @@
             transition: border 0.3s;
         }
 
-        select:focus, input:focus {
+        input:focus {
             border-color: var(--primary);
         }
 
@@ -118,32 +119,6 @@
             filter: brightness(1.2);
         }
 
-        .output-box {
-            margin-top: 30px;
-            background: #000;
-            padding: 20px;
-            border-radius: 12px;
-            position: relative;
-        }
-
-        pre {
-            font-size: 13px;
-            color: #4caf50;
-            overflow-x: auto;
-        }
-
-        .copy-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            padding: 6px 12px;
-            font-size: 11px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 6px;
-            color: white;
-            cursor: pointer;
-        }
-
         .current-status {
             margin-bottom: 20px;
             padding: 10px;
@@ -160,10 +135,10 @@
 
     <div class="admin-card">
         <h1>Event Control Panel</h1>
-        <p class="subtitle">Update the stream state for all devices.</p>
+        <p class="subtitle">Update the stream state for all devices instantly.</p>
 
         <div id="liveStatus" class="current-status">
-            Fetching current status...
+            Connecting to Firebase...
         </div>
 
         <div class="form-group">
@@ -173,70 +148,79 @@
 
         <label>Quick Actions</label>
         <div class="btn-grid">
-            <button class="btn-waiting" onclick="updateJson('waiting')">
+            <button class="btn-waiting" id="btn-waiting">
                 Set Waiting
                 <span>Show Start Image</span>
             </button>
-            <button class="btn-live" onclick="updateJson('live')">
+            <button class="btn-live" id="btn-live">
                 Go Live
                 <span>Show Video Stream</span>
             </button>
-            <button class="btn-resume" onclick="updateJson('resume')">
+            <button class="btn-resume" id="btn-resume">
                 Set Resume
                 <span>Show 30m Message</span>
             </button>
-            <button class="btn-thanks" onclick="updateJson('thanks')">
+            <button class="btn-thanks" id="btn-thanks">
                 Show Thanks
                 <span>End Stream</span>
             </button>
         </div>
 
-        <div class="output-box">
-            <div class="copy-btn" onclick="copyJson()">Copy to Clipboard</div>
-            <pre id="jsonOutput">{
-    "status": "waiting",
-    "videoId": ""
-}</pre>
-        </div>
-        <p style="font-size: 12px; color: var(--text-dim); margin-top: 15px; text-align: center;">
-            Copy this and paste it into <b>status.json</b> to update all devices.
+        <p id="saveMessage" style="font-size: 12px; color: #4caf50; margin-top: 15px; text-align: center; display: none;">
+            Status Updated Successfully!
         </p>
     </div>
 
-    <script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyB5tWsfjCTbh1KO5X2xZQeX2SwTZ9dJcs8",
+            authDomain: "ignite2026-bf820.firebaseapp.com",
+            projectId: "ignite2026-bf820",
+            storageBucket: "ignite2026-bf820.firebasestorage.app",
+            messagingSenderId: "301380534120",
+            appId: "1:301380534120:web:0acad3ac76d4523d7a20dd"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const statusRef = ref(db, 'event/status');
+
         const videoInput = document.getElementById('videoId');
-        const jsonOutput = document.getElementById('jsonOutput');
         const liveStatus = document.getElementById('liveStatus');
+        const saveMessage = document.getElementById('saveMessage');
 
-        function updateJson(status) {
+        async function updateStatus(status) {
             const videoId = videoInput.value;
-            const config = {
-                status: status,
-                videoId: status === 'live' ? videoId : ""
-            };
-
-            jsonOutput.innerText = JSON.stringify(config, null, 4);
-        }
-
-        function copyJson() {
-            navigator.clipboard.writeText(jsonOutput.innerText);
-            const btn = document.querySelector('.copy-btn');
-            btn.innerText = 'Copied!';
-            setTimeout(() => btn.innerText = 'Copy to Clipboard', 2000);
-        }
-
-        // Fetch current live status
-        async function fetchStatus() {
             try {
-                const res = await fetch('status.json?t=' + Date.now());
-                const data = await res.json();
-                liveStatus.innerText = "Current Status: " + data.status.toUpperCase() + (data.videoId ? " (" + data.videoId + ")" : "");
-            } catch (e) {
-                liveStatus.innerText = "Status: Error fetching or file not found.";
+                await set(statusRef, {
+                    status: status,
+                    videoId: status === 'live' ? videoId : ""
+                });
+                
+                saveMessage.style.display = 'block';
+                setTimeout(() => saveMessage.style.display = 'none', 3000);
+            } catch (error) {
+                alert("Error updating status: " + error.message);
             }
         }
 
-        fetchStatus();
+        // Attach listeners
+        document.getElementById('btn-waiting').onclick = () => updateStatus('waiting');
+        document.getElementById('btn-live').onclick = () => updateStatus('live');
+        document.getElementById('btn-resume').onclick = () => updateStatus('resume');
+        document.getElementById('btn-thanks').onclick = () => updateStatus('thanks');
+
+        // Monitor current status
+        onValue(statusRef, (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                liveStatus.innerText = "Current Status: " + data.status.toUpperCase() + (data.videoId ? " (" + data.videoId + ")" : "");
+                if (data.videoId && !videoInput.value) videoInput.value = data.videoId;
+            }
+        });
     </script>
 </body>
 </html>

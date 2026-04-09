@@ -139,7 +139,7 @@
 
 <body>
 
-    <div class="event-wrapper">
+    <div class="event-wrapper" id="appWrapper" style="display: none;">
         <div id="mainBg" class="background-container">
             <!-- Video Overlay -->
             <div id="videoContainer" class="video-overlay">
@@ -202,35 +202,46 @@
         }
 
         /**
-         * AUTO-STATE CONTROLLER
-         * Checks status.json every 10 seconds to switch states for all users
+         * FIREBASE REAL-TIME INTEGRATION
          */
-        let currentStatus = 'waiting';
-        async function checkStatus() {
-            try {
-                const response = await fetch('status.json?t=' + Date.now());
-                const data = await response.json();
-                
-                if (data.status !== currentStatus) {
-                    currentStatus = data.status;
-                    if (data.status === 'live') {
-                        startLive(data.videoId);
-                    } else if (data.status === 'resume') {
-                        showResumeScreen();
-                    } else if (data.status === 'thanks') {
-                        showThankYou();
-                    } else {
-                        showWaitingScreen();
-                    }
-                }
-            } catch (e) {
-                console.log("Status file not found yet or error parsing.");
-            }
-        }
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        // Start checking every 10 seconds
-        setInterval(checkStatus, 10000);
-        checkStatus(); // Initial check
+        const firebaseConfig = {
+            apiKey: "AIzaSyB5tWsfjCTbh1KO5X2xZQeX2SwTZ9dJcs8",
+            authDomain: "ignite2026-bf820.firebaseapp.com",
+            projectId: "ignite2026-bf820",
+            storageBucket: "ignite2026-bf820.firebasestorage.app",
+            messagingSenderId: "301380534120",
+            appId: "1:301380534120:web:0acad3ac76d4523d7a20dd"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const statusRef = ref(db, 'event/status');
+
+        let currentStatus = null;
+
+        onValue(statusRef, (snapshot) => {
+            const data = snapshot.val();
+            if (!data) return;
+
+            // Show app once first data is received
+            document.getElementById('appWrapper').style.display = 'flex';
+
+            if (data.status !== currentStatus) {
+                currentStatus = data.status;
+                if (data.status === 'live') {
+                    startLive(data.videoId);
+                } else if (data.status === 'resume') {
+                    showResumeScreen();
+                } else if (data.status === 'thanks') {
+                    showThankYou();
+                } else {
+                    showWaitingScreen();
+                }
+            }
+        });
     </script>
 </body>
 
