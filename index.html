@@ -24,8 +24,9 @@
             --logo-stream-width: 444px;
 
             --text-top: 54%;
-            --text-left: 94.5%;
-            --text-size: 3.9rem;
+            --text-left: 50%;
+            --text-size: 3.5rem;
+
 
             --video-top: 22.5%;
             --video-left: 15%;
@@ -36,7 +37,8 @@
             --m-logo-top: 25%;
             --m-logo-width: 80%;
             --m-text-top: 65%;
-            --m-text-size: 1.8rem;
+            --m-text-size: 1.2rem;
+
             --m-video-top: 40%;
             --m-video-left: 5%;
             --m-video-width: 90%;
@@ -93,7 +95,10 @@
             .branding-overlay { top: var(--m-logo-top) !important; left: 0 !important; }
             .event-logo { max-width: var(--m-logo-width) !important; max-height: 150px; }
             .status-content { top: var(--m-text-top) !important; left: 0 !important; width: 100% !important; transform: translateY(-50%) !important; }
-            .status-text { font-size: var(--m-text-size) !important; }
+            .status-text { 
+                font-size: var(--m-text-size) !important; 
+                white-space: normal !important; 
+            }
             .video-overlay { top: var(--m-video-top) !important; left: var(--m-video-left) !important; width: var(--m-video-width) !important; height: var(--m-video-height) !important; }
         }
     </style>
