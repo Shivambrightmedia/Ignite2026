@@ -121,7 +121,7 @@
             height: auto;
             max-height: 200px;
             opacity: var(--logo-opacity);
-            filter: drop-shadow(0 0 20px rgba(0,0,0,0.5));
+            filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.5));
             transition: max-width 0.1s;
         }
 
@@ -141,18 +141,30 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             line-height: 1.2;
-            text-shadow: 0 4px 15px rgba(0,0,0,0.8);
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
             animation: fadeInOut 2s infinite alternate;
         }
 
         @keyframes fadeInOut {
-            from { opacity: 0.8; transform: translate(-50%, -50%) scale(0.98); }
-            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            from {
+                opacity: 0.8;
+                transform: translate(-50%, -50%) scale(0.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
         }
 
         @media (max-width: 768px) {
-            .event-logo { max-width: 250px; }
-            .status-text { font-size: 1.5rem; }
+            .event-logo {
+                max-width: 250px;
+            }
+
+            .status-text {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
@@ -201,7 +213,7 @@
             // Clear placeholder and add iframe
             videoContainer.innerHTML = '';
             videoContainer.appendChild(iframe);
-            
+
             // Hide status text when video is live
             statusContent.style.display = 'none';
         }
@@ -230,7 +242,7 @@
          */
         function showThankYou() {
             mainBg.style.backgroundImage = "url('Images/thankyou for watching.png')";
-            videoContainer.innerHTML = ''; 
+            videoContainer.innerHTML = '';
             statusContent.style.display = 'block';
             statusText.innerText = "THANK YOU FOR WATCHING";
         }
@@ -242,7 +254,7 @@
             mainBg.style.backgroundImage = "url('Images/Stream will resume in 30 mins.png')";
             videoContainer.innerHTML = '';
             statusContent.style.display = 'block';
-            statusText.innerText = "STREAM WILL RESUME IN 30 MINS";
+            statusText.innerText = "STREAMING WILL RESUME IN 30 MINS";
         }
 
         // Expose functions to window for console testing
@@ -308,7 +320,7 @@
 
         window.addEventListener('keydown', (e) => {
             const step = 0.5;
-            
+
             // Text Controls (Arrows + 1/2)
             if (e.key === 'ArrowUp') tTop -= step;
             if (e.key === 'ArrowDown') tTop += step;
