@@ -123,25 +123,6 @@
     </div>
 
     <script type="module">
-        // Adjusted values saved in local state
-        let desktop = { lTop: 16, lWidth: 940, tTop: 54, tLeft: 94.5, tSize: 3.9 };
-        let mobile = { lTop: 25, lWidth: 80, tTop: 65, tSize: 1.8 };
-
-        window.addEventListener('keydown', (e) => {
-            const isMob = window.innerWidth <= 768;
-            const p = isMob ? mobile : desktop;
-            const pre = isMob ? '--m-' : '--';
-            const s = e.shiftKey ? 2 : 0.5;
-
-            if (e.code === 'KeyW') p.lTop -= s; if (e.code === 'KeyS') p.lTop += s;
-            if (e.key === '9') p.lWidth -= (isMob ? 2 : 10); if (e.key === '0') p.lWidth += (isMob ? 2 : 10);
-            if (e.key === 'ArrowUp') p.tTop -= s; if (e.key === 'ArrowDown') p.tTop += s;
-
-            const root = document.documentElement;
-            root.style.setProperty(`${pre}logo-top`, p.lTop + '%');
-            root.style.setProperty(`${pre}logo-width`, p.lWidth + (isMob ? '%' : 'px'));
-            root.style.setProperty(`${pre}text-top`, p.tTop + '%');
-        });
 
         const mainBg = document.getElementById('mainBg');
         const videoContainer = document.getElementById('videoContainer');
