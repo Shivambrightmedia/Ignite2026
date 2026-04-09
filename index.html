@@ -217,7 +217,15 @@
             if (!videoId) return;
 
             const iframe = document.createElement('iframe');
-            iframe.src = `https://player.vimeo.com/video/${videoId}?autoplay=1&title=0&byline=0&portrait=0`;
+            
+            // Smart URL detection: Use event embed for shorter IDs (common for Vimeo Live Events)
+            // Regular videos usually have 9-10 digits.
+            const isEvent = videoId.toString().length < 9;
+            const embedUrl = isEvent 
+                ? `https://vimeo.com/event/${videoId}/embed`
+                : `https://player.vimeo.com/video/${videoId}?autoplay=1&title=0&byline=0&portrait=0`;
+
+            iframe.src = embedUrl;
             iframe.allow = "autoplay; fullscreen; picture-in-picture";
             iframe.style.width = '100%';
             iframe.style.height = '100%';
