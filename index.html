@@ -222,7 +222,6 @@
             const iframe = document.createElement('iframe');
             iframe.src = `https://player.vimeo.com/video/${videoId}?autoplay=1&title=0&byline=0&portrait=0`;
             iframe.allow = "autoplay; fullscreen; picture-in-picture";
-            iframe.allowFullscreen = true;
             iframe.style.width = '100%';
             iframe.style.height = '100%';
             iframe.style.border = 'none';
@@ -289,11 +288,11 @@
         let lTop = 16; let lLeft = -0.5; let lWidth = 940; // Main Logo
         let tTop = 54; let tLeft = 94.5; let tSize = 3.9;  // Text
 
-        // Video Controls (Default start values)
+        // Video Controls (Match your CSS defaults)
         let vTop = 25; let vLeft = 15; let vWidth = 70; let vHeight = 60;
 
         window.addEventListener('keydown', (e) => {
-            const step = 0.5;
+            const step = e.shiftKey ? 2 : 0.5; // Hold Shift to move faster!
             const isLive = currentStatus === 'live';
 
             if (isLive) {
