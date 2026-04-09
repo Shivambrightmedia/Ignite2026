@@ -19,183 +19,97 @@
             --text-color: #E8BA65;
             --accent-color: #ff5722;
 
-            /* LOGO ADJUSTMENT (MAIN PAGES) */
-            --logo-top: 16%;
-            --logo-left: -0.5%;
-            --logo-width: 940px;
+            /* DESKTOP DEFAULTS */
+            --logo-top: 16%; --logo-left: -0.5%; --logo-width: 940px;
+            --text-top: 54%; --text-left: 94.5%; --text-size: 3.9rem;
+            --video-top: 22.5%; --video-left: 15%; --video-width: 70%; --video-height: 75.5%;
 
-            /* LOGO ADJUSTMENT (LIVE STREAM PAGE) */
-            --logo-stream-top: 6%;
-            --logo-stream-left: 0%;
-            --logo-stream-width: 444px;
+            /* MOBILE DEFAULTS */
+            --m-logo-top: 25%; --m-logo-width: 80%;
+            --m-text-top: 65%; --m-text-size: 1.8rem;
+            --m-video-top: 40%; --m-video-left: 5%; --m-video-width: 90%; --m-video-height: 25%;
 
             --logo-opacity: 1;
-
-            /* TEXT ADJUSTMENT (MAIN PAGES) */
-            --text-top: 54%;
-            --text-left: 94.5%;
-            --text-size: 3.9rem;
-
-            /* 
-               MOBILE ADJUSTMENTS 
-            */
-            --mobile-logo-top: 25%;
-            --mobile-logo-width: 80%;
-            --mobile-text-top: 65%;
-            --mobile-text-size: 1.8rem;
-
-            /* 
-               ADJUST VIDEO POSITIONING HERE 
-            */
-            --video-top: 22.5%;
-            --video-left: 15%;
-            --video-width: 70%;
-            --video-height: 75.5%;
-
-            /* Aspect ratio padding */
-            --aspect-ratio-padding: 56.25%;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
             font-family: 'Outfit', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow: hidden;
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; overflow: hidden;
         }
 
-        /* Main container */
         .event-wrapper {
-            position: relative;
-            width: 100%;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: var(--bg-color);
+            position: relative; width: 100%; height: 100vh;
+            display: flex; justify-content: center; align-items: center;
         }
 
         .background-container {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-            background-image: url('Images/Event will start 3pm.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            transition: background-image 0.5s ease-in-out;
+            position: relative; width: 100vw; height: 100vh;
+            background-size: cover; background-position: center;
+            background-repeat: no-repeat; transition: background-image 0.5s ease-in-out;
         }
 
-        /* Video Overlay */
         .video-overlay {
             position: absolute;
-            top: var(--video-top);
-            left: var(--video-left);
-            width: var(--video-width);
-            height: var(--video-height);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
+            top: var(--video-top); left: var(--video-left);
+            width: var(--video-width); height: var(--video-height);
+            display: flex; justify-content: center; align-items: center;
             z-index: 5;
         }
 
         .branding-overlay {
             position: absolute;
-            top: var(--logo-top);
-            left: var(--logo-left);
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            z-index: 10;
-        }
-
-        .branding-overlay.live-mode {
-            top: var(--logo-stream-top);
-            left: var(--logo-stream-left);
+            top: var(--logo-top); left: var(--logo-left);
+            width: 100%; display: flex; justify-content: center; z-index: 10;
         }
 
         .event-logo {
-            width: auto;
-            max-width: var(--logo-width);
-            height: auto;
-            max-height: 250px;
-            opacity: var(--logo-opacity);
+            width: auto; max-width: var(--logo-width);
+            height: auto; max-height: 250px;
             filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.5));
-            transition: max-width 0.1s;
-        }
-
-        .branding-overlay.live-mode .event-logo {
-            max-width: var(--logo-stream-width);
         }
 
         .status-content {
             position: absolute;
-            top: var(--text-top);
-            left: var(--text-left);
+            top: var(--text-top); left: var(--text-left);
             transform: translate(-50%, -50%);
-            width: 90%;
-            text-align: center;
-            z-index: 8;
+            width: 90%; text-align: center; z-index: 8;
         }
 
         .status-text {
             font-size: var(--text-size);
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            line-height: 1.2;
+            font-weight: 700; text-transform: uppercase;
+            letter-spacing: 2px; line-height: 1.2;
             text-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
-            animation: fadeInOut 2s infinite alternate;
+            animation: pulseFade 2s infinite alternate;
         }
 
-        @keyframes fadeInOut {
-            from { opacity: 0.7; }
-            to { opacity: 1; }
+        @keyframes pulseFade {
+            from { opacity: 0.7; } to { opacity: 1; }
         }
 
         /* 
-           MOBILE RESPONSIVENESS 
+           MOBILE OVERRIDES
         */
         @media (max-width: 768px) {
-            #mainBg {
-                background-image: url('Images/1920x1080.png') !important;
-                background-size: contain;
-                background-position: center;
+            #mainBg { background-image: url('Images/1920x1080.png') !important; background-size: contain; }
+            
+            .branding-overlay { top: var(--m-logo-top) !important; left: 0 !important; }
+            .event-logo { max-width: var(--m-logo-width) !important; max-height: 150px; }
+            
+            .status-content { 
+                top: var(--m-text-top) !important; left: 0 !important; 
+                width: 100% !important; transform: translateY(-50%) !important; 
             }
-            .branding-overlay {
-                top: var(--mobile-logo-top) !important;
-                left: 0 !important;
-            }
-            .event-logo {
-                max-width: var(--mobile-logo-width) !important;
-                max-height: 180px;
-            }
-             .status-content {
-                top: var(--mobile-text-top) !important;
-                left: 0 !important;
-                width: 100% !important;
-                transform: translateY(-50%) !important;
-            }
+            .status-text { font-size: var(--m-text-size) !important; }
 
-            .status-text {
-                font-size: var(--mobile-text-size) !important;
-            }
             .video-overlay {
-                top: 40% !important;
-                left: 5% !important;
-                width: 90% !important;
-                height: auto !important;
-                aspect-ratio: 16/9;
+                top: var(--m-video-top) !important; left: var(--m-video-left) !important;
+                width: var(--m-video-width) !important; height: var(--m-video-height) !important;
             }
         }
     </style>
@@ -204,7 +118,7 @@
 <body>
     <div class="event-wrapper" id="appWrapper" style="display: none;">
         <div id="mainBg" class="background-container">
-            <div class="branding-overlay">
+            <div class="branding-overlay" id="logoWrap">
                 <img src="Images/Truhome finance ignite logo.png" class="event-logo" alt="Ignite 2026">
             </div>
             <div id="statusContent" class="status-content">
@@ -216,48 +130,58 @@
 
     <script type="module">
         /**
-         * VISUAL ADJUSTER - MOBILE & DESKTOP AWARE
+         * FULL DEVICE-AWARE ADJUSTER
          */
-        let logoTop = 16; let logoWidth = 940; 
-        let mLogoTop = 25; let mLogoWidth = 80;
+        let d = { lTop: 16, lLeft: -0.5, lWidth: 940, tTop: 54, tLeft: 94.5, tSize: 3.9, vTop: 22.5, vLeft: 15, vWidth: 70, vHeight: 75.5 };
+        let m = { lTop: 25, lWidth: 80, tTop: 65, tSize: 1.8, vTop: 40, vLeft: 5, vWidth: 90, vHeight: 25 };
 
         window.addEventListener('keydown', (e) => {
-            const isMobile = window.innerWidth <= 768;
-            const step = e.shiftKey ? 2 : 0.5;
+            const isMob = window.innerWidth <= 768;
+            const p = isMob ? m : d;
+            const prefix = isMob ? '--m-' : '--';
+            const s = e.shiftKey ? 2 : 0.5;
 
-            if (isMobile) {
-                if (e.code === 'KeyW') mLogoTop -= step;
-                if (e.code === 'KeyS') mLogoTop += step;
-                if (e.key === '9') mLogoWidth -= 2;
-                if (e.key === '0') mLogoWidth += 2;
-                document.documentElement.style.setProperty('--mobile-logo-top', mLogoTop + '%');
-                document.documentElement.style.setProperty('--mobile-logo-width', mLogoWidth + '%');
-                console.log(`MOBILE LOGO: --mobile-logo-top: ${mLogoTop}%; --mobile-logo-width: ${mLogoWidth}%;`);
-            } else {
-                if (e.code === 'KeyW') logoTop -= step;
-                if (e.code === 'KeyS') logoTop += step;
-                if (e.key === '9') logoWidth -= 10;
-                if (e.key === '0') logoWidth += 10;
-                document.documentElement.style.setProperty('--logo-top', logoTop + '%');
-                document.documentElement.style.setProperty('--logo-width', logoWidth + 'px');
-                console.log(`DESKTOP LOGO: --logo-top: ${logoTop}%; --logo-width: ${logoWidth}px;`);
-            }
+            // LOGO (WASD)
+            if (e.code === 'KeyW') p.lTop -= s; if (e.code === 'KeyS') p.lTop += s;
+            if (e.key === '9') p.lWidth -= (isMob ? 1 : 10); if (e.key === '0') p.lWidth += (isMob ? 1 : 10);
+            
+            // TEXT (Arrows)
+            if (e.key === 'ArrowUp') p.tTop -= s; if (e.key === 'ArrowDown') p.tTop += s;
+            if (e.key === '1') p.tSize -= 0.1; if (e.key === '2') p.tSize += 0.1;
+
+            // VIDEO (IJKL)
+            if (e.key === 'i') p.vTop -= s; if (e.key === 'k') p.vTop += s;
+            if (e.key === 'j') p.vLeft -= s; if (e.key === 'l') p.vLeft += s;
+            if (e.key === '[') p.vWidth -= s; if (e.key === ']') p.vWidth += s;
+            if (e.key === 'p') p.vHeight -= s; if (e.key === ';') p.vHeight += s;
+
+            // Apply
+            const root = document.documentElement;
+            root.style.setProperty(`${prefix}logo-top`, p.lTop + '%');
+            root.style.setProperty(`${prefix}logo-width`, p.lWidth + (isMob ? '%' : 'px'));
+            root.style.setProperty(`${prefix}text-top`, p.tTop + '%');
+            root.style.setProperty(`${prefix}text-size`, p.tSize + 'rem');
+            root.style.setProperty(`${prefix}video-top`, p.vTop + '%');
+            root.style.setProperty(`${prefix}video-left`, p.vLeft + '%');
+            root.style.setProperty(`${prefix}video-width`, p.vWidth + '%');
+            root.style.setProperty(`${prefix}video-height`, p.vHeight + '%');
+
+            console.clear();
+            console.log(`%c ${isMob ? 'MOBILE' : 'DESKTOP'} CONFIG:`, 'color: gold; font-weight: bold;');
+            console.log(JSON.stringify(p, null, 2));
         });
 
+        // Firebase & Logic
         const mainBg = document.getElementById('mainBg');
         const videoContainer = document.getElementById('videoContainer');
         const statusText = document.getElementById('statusText');
         const statusContent = document.getElementById('statusContent');
-        const brandingOverlay = document.querySelector('.branding-overlay');
 
         function loadVideo(videoId) {
             if (!videoId) return;
             const iframe = document.createElement('iframe');
-            const isEvent = videoId.toString().length < 9;
-            const embedUrl = isEvent
-                ? `https://vimeo.com/event/${videoId}/embed/interaction`
-                : `https://player.vimeo.com/video/${videoId}?autoplay=1&title=0&byline=0&portrait=0`;
-            iframe.src = embedUrl;
+            const isEv = videoId.toString().length < 9;
+            iframe.src = isEv ? `https://vimeo.com/event/${videoId}/embed/interaction` : `https://player.vimeo.com/video/${videoId}?autoplay=1&title=0&byline=0&portrait=0`;
             iframe.allow = "autoplay; fullscreen; picture-in-picture; encrypted-media; web-share";
             iframe.style.width = '100%'; iframe.style.height = '100%'; iframe.style.border = 'none';
             videoContainer.innerHTML = ''; videoContainer.appendChild(iframe);
@@ -267,27 +191,23 @@
         function showWaitingScreen() {
             mainBg.style.backgroundImage = "url('Images/Event will start 3pm.png')";
             videoContainer.innerHTML = ''; statusContent.style.display = 'block';
-            brandingOverlay.style.display = 'flex'; brandingOverlay.classList.remove('live-mode');
             statusText.innerText = "EVENT WILL START @3:00PM ON 11TH APRIL, 2026";
         }
 
         function startLive(videoId) {
             mainBg.style.backgroundImage = "url('Images/videostream.png')";
-            statusContent.style.display = 'none'; brandingOverlay.style.display = 'flex';
-            brandingOverlay.classList.add('live-mode'); loadVideo(videoId);
+            statusContent.style.display = 'none'; loadVideo(videoId);
         }
 
         function showThankYou() {
             mainBg.style.backgroundImage = "url('Images/thankyou for watching.png')";
             videoContainer.innerHTML = ''; statusContent.style.display = 'block';
-            brandingOverlay.style.display = 'flex'; brandingOverlay.classList.remove('live-mode');
             statusText.innerText = "THANK YOU FOR WATCHING";
         }
 
         function showResumeScreen() {
             mainBg.style.backgroundImage = "url('Images/Stream will resume in 30 mins.png')";
             videoContainer.innerHTML = ''; statusContent.style.display = 'block';
-            brandingOverlay.style.display = 'flex'; brandingOverlay.classList.remove('live-mode');
             statusText.innerText = "STREAMING WILL RESUME IN 30 MINS";
         }
 
@@ -307,16 +227,15 @@
         const db = getDatabase(app);
         const statusRef = ref(db, 'event/status');
 
-        let currentStatus = null;
-        onValue(statusRef, (snapshot) => {
-            const data = snapshot.val();
-            if (!data) return;
+        let curS = null;
+        onValue(statusRef, (s) => {
+            const d = s.val(); if (!d) return;
             document.getElementById('appWrapper').style.display = 'flex';
-            if (data.status !== currentStatus) {
-                currentStatus = data.status;
-                if (data.status === 'live') startLive(data.videoId);
-                else if (data.status === 'resume') showResumeScreen();
-                else if (data.status === 'thanks') showThankYou();
+            if (d.status !== curS) {
+                curS = d.status;
+                if (d.status === 'live') startLive(d.videoId);
+                else if (d.status === 'resume') showResumeScreen();
+                else if (d.status === 'thanks') showThankYou();
                 else showWaitingScreen();
             }
         });
