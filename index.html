@@ -25,7 +25,7 @@
             --logo-width: 940px;
 
             /* LOGO ADJUSTMENT (LIVE STREAM PAGE) */
-            --logo-stream-top: 2%;
+            --logo-stream-top: 6%;
             --logo-stream-left: 0%;
             --logo-stream-width: 444px;
 
@@ -217,11 +217,11 @@
             if (!videoId) return;
 
             const iframe = document.createElement('iframe');
-            
+
             // Smart URL detection: Use event embed for shorter IDs (common for Vimeo Live Events)
             // Interaction URL supports chat/polls if enabled in the Vimeo event
             const isEvent = videoId.toString().length < 9;
-            const embedUrl = isEvent 
+            const embedUrl = isEvent
                 ? `https://vimeo.com/event/${videoId}/embed/interaction`
                 : `https://player.vimeo.com/video/${videoId}?autoplay=1&title=0&byline=0&portrait=0`;
 
