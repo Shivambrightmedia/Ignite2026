@@ -13,12 +13,12 @@
         :root {
             --bg-color: #000000;
             --text-color: #E8BA65;
-            
+
             /* --- DESKTOP VARIABLES (LOCKED) --- */
             --logo-top: 16%;
             --logo-left: -0.5%;
             --logo-width: 940px;
-            
+
             --logo-stream-top: 6%;
             --logo-stream-left: 0%;
             --logo-stream-width: 444px;
@@ -43,32 +43,74 @@
             --m-video-left: 5%;
             --m-video-width: 90%;
             --m-video-height: 25%;
+
+            /* --- TABLET VARIABLES (NEW) --- */
+            --t-logo-top: 20%;
+            --t-logo-width: 70%;
+            --t-text-top: 60%;
+            --t-text-size: 2.5rem;
+            --t-video-top: 30%;
+            --t-video-left: 10%;
+            --t-video-width: 80%;
+            --t-video-height: 40%;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background-color: var(--bg-color); font-family: 'Outfit', sans-serif; overflow: hidden; }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: 'Outfit', sans-serif;
+            overflow: hidden;
+        }
 
         .background-container {
-            position: relative; width: 100vw; height: 100vh;
-            background-size: cover; background-position: center; transition: background-image 0.5s;
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background-size: cover;
+            background-position: center;
+            transition: background-image 0.5s;
         }
 
         /* Desktop Layout */
         .branding-overlay {
-            position: absolute; top: var(--logo-top); left: var(--logo-left);
-            width: 100%; display: flex; justify-content: center; z-index: 10;
+            position: absolute;
+            top: var(--logo-top);
+            left: var(--logo-left);
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            z-index: 10;
         }
-        .branding-overlay.live-mode { top: var(--logo-stream-top); left: var(--logo-stream-left); }
-        .event-logo { width: auto; max-width: var(--logo-width); height: auto; max-height: 250px; }
-        .branding-overlay.live-mode .event-logo { max-width: var(--logo-stream-width); }
+
+        .branding-overlay.live-mode {
+            top: var(--logo-stream-top);
+            left: var(--logo-stream-left);
+        }
+
+        .event-logo {
+            width: auto;
+            max-width: var(--logo-width);
+            height: auto;
+            max-height: 250px;
+        }
+
+        .branding-overlay.live-mode .event-logo {
+            max-width: var(--logo-stream-width);
+        }
 
         .status-content {
-            position: absolute; 
-            top: var(--text-top); 
+            position: absolute;
+            top: var(--text-top);
             left: var(--text-left);
-            transform: translate(-50%, -50%); 
-            width: auto; 
-            text-align: center; 
+            transform: translate(-50%, -50%);
+            width: auto;
+            text-align: center;
             z-index: 8;
             white-space: nowrap;
         }
@@ -76,37 +118,103 @@
 
 
         .status-text {
-            font-size: var(--text-size); color: var(--text-color); font-weight: 700;
-            text-transform: uppercase; letter-spacing: 2px;
+            font-size: var(--text-size);
+            color: var(--text-color);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
 
         .video-overlay {
-            position: absolute; top: var(--video-top); left: var(--video-left);
-            width: var(--video-width); height: var(--video-height); z-index: 5;
+            position: absolute;
+            top: var(--video-top);
+            left: var(--video-left);
+            width: var(--video-width);
+            height: var(--video-height);
+            z-index: 5;
         }
 
 
         /* --- MOBILE MODE (Completely Separate) --- */
         @media (max-width: 768px) {
-            #mainBg { 
-                background-image: url('Images/1920x1080.png') !important; 
-                background-size: cover; 
+            #mainBg {
+                background-image: url('Images/1920x1080.png') !important;
+                background-size: cover;
                 background-position: center top;
             }
-            .branding-overlay { top: var(--m-logo-top) !important; left: 0 !important; }
-            .event-logo { max-width: var(--m-logo-width) !important; max-height: 150px; }
-            .status-content { top: var(--m-text-top) !important; left: 0 !important; width: 100% !important; transform: translateY(-50%) !important; }
-            .status-text { 
-                font-size: var(--m-text-size) !important; 
-                white-space: normal !important; 
+
+            .branding-overlay {
+                top: var(--m-logo-top) !important;
+                left: 0 !important;
+            }
+
+            .event-logo {
+                max-width: var(--m-logo-width) !important;
+                max-height: 150px;
+            }
+
+            .status-content {
+                top: var(--m-text-top) !important;
+                left: 0 !important;
+                width: 100% !important;
+                transform: translateY(-50%) !important;
+            }
+
+            .status-text {
+                font-size: var(--m-text-size) !important;
+                white-space: normal !important;
                 line-height: 1.6 !important;
                 letter-spacing: 1px !important;
             }
 
-            .video-overlay { top: var(--m-video-top) !important; left: var(--m-video-left) !important; width: var(--m-video-width) !important; height: var(--m-video-height) !important; }
+            .video-overlay {
+                top: var(--m-video-top) !important;
+                left: var(--m-video-left) !important;
+                width: var(--m-video-width) !important;
+                height: var(--m-video-height) !important;
+            }
+        }
+
+        /* --- TABLET MODE (NEW) --- */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            #mainBg {
+                background-image: url('Images/Event will start 3pm.png') !important; /* Default desktop background for tablet */
+                background-size: cover;
+            }
+
+            .branding-overlay {
+                top: var(--t-logo-top) !important;
+                left: 0 !important;
+            }
+
+            .event-logo {
+                max-width: var(--t-logo-width) !important;
+                max-height: 200px;
+            }
+
+            .status-content {
+                top: var(--t-text-top) !important;
+                left: 0 !important;
+                width: 100% !important;
+                transform: translateY(-50%) !important;
+                white-space: normal !important;
+            }
+
+            .status-text {
+                font-size: var(--t-text-size) !important;
+                line-height: 1.4 !important;
+            }
+
+            .video-overlay {
+                top: var(--t-video-top) !important;
+                left: var(--t-video-left) !important;
+                width: var(--t-video-width) !important;
+                height: var(--t-video-height) !important;
+            }
         }
     </style>
+
 </head>
 
 <body>
@@ -189,4 +297,5 @@
         });
     </script>
 </body>
+
 </html>
