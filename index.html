@@ -19,11 +19,16 @@
             --text-color: #ffffff;
             --accent-color: #ff5722;
 
-            /* LOGO ADJUSTMENT VARIABLES */
-            --logo-top: 5%;
-            --logo-left: 0%;
-            --logo-width: 400px;
+            /* LOGO ADJUSTMENT (PERMANENT) */
+            --logo-top: 16%;
+            --logo-left: -0.5%;
+            --logo-width: 940px;
             --logo-opacity: 1;
+
+            /* TEXT ADJUSTMENT VARIABLES */
+            --text-top: 50%;
+            --text-left: 50%;
+            --text-size: 2.8rem;
 
             /* 
                ADJUST VIDEO POSITIONING HERE 
@@ -122,8 +127,8 @@
 
         .status-content {
             position: absolute;
-            top: 50%;
-            left: 50%;
+            top: var(--text-top);
+            left: var(--text-left);
             transform: translate(-50%, -50%);
             width: 90%;
             text-align: center;
@@ -131,7 +136,7 @@
         }
 
         .status-text {
-            font-size: 2.8rem;
+            font-size: var(--text-size);
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 2px;
@@ -291,15 +296,20 @@
         });
 
         /**
-         * LOGO VISUAL ADJUSTER (FOR ADMIN)
-         * Use Arrows to move, 1/2 to size
+         * VISUAL ADJUSTER (FOR ADMIN)
          */
-        let lTop = 5;
-        let lLeft = 0;
-        let lWidth = 400;
+        let lTop = 16;
+        let lLeft = -0.5;
+        let lWidth = 940;
+
+        let tTop = 50;
+        let tLeft = 50;
+        let tSize = 2.8;
 
         window.addEventListener('keydown', (e) => {
             const step = 0.5;
+            
+            // Logo Controls (Arrows + 1/2)
             if (e.key === 'ArrowUp') lTop -= step;
             if (e.key === 'ArrowDown') lTop += step;
             if (e.key === 'ArrowLeft') lLeft -= step;
@@ -307,13 +317,31 @@
             if (e.key === '1') lWidth -= 10;
             if (e.key === '2') lWidth += 10;
 
-            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', '1', '2'].includes(e.key)) {
-                document.documentElement.style.setProperty('--logo-top', lTop + '%');
-                document.documentElement.style.setProperty('--logo-left', lLeft + '%');
-                document.documentElement.style.setProperty('--logo-width', lWidth + 'px');
-                
-                console.log(`%c NEW LOGO CSS:`, 'color: #ff5722; font-weight: bold;');
+            // Text Controls (W/A/S/D + 9/0)
+            if (e.code === 'KeyW') tTop -= step;
+            if (e.code === 'KeyS') tTop += step;
+            if (e.code === 'KeyA') tLeft -= step;
+            if (e.code === 'KeyD') tLeft += step;
+            if (e.key === '9') tSize -= 0.1;
+            if (e.key === '0') tSize += 0.1;
+
+            // Apply Logo Changes
+            document.documentElement.style.setProperty('--logo-top', lTop + '%');
+            document.documentElement.style.setProperty('--logo-left', lLeft + '%');
+            document.documentElement.style.setProperty('--logo-width', lWidth + 'px');
+            
+            // Apply Text Changes
+            document.documentElement.style.setProperty('--text-top', tTop + '%');
+            document.documentElement.style.setProperty('--text-left', tLeft + '%');
+            document.documentElement.style.setProperty('--text-size', tSize + 'rem');
+
+            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', '1', '2', 'KeyW', 'KeyS', 'KeyA', 'KeyD', '9', '0'].includes(e.key) || e.code.startsWith('Key')) {
+                console.clear();
+                console.log(`%c CURRENT CONFIG:`, 'color: #ff5722; font-weight: bold; font-size: 14px;');
+                console.log(`%c LOGO:`, 'color: #fff; font-weight: bold;');
                 console.log(`--logo-top: ${lTop}%;\n--logo-left: ${lLeft}%;\n--logo-width: ${lWidth}px;`);
+                console.log(`%c TEXT:`, 'color: #fff; font-weight: bold;');
+                console.log(`--text-top: ${tTop}%;\n--text-left: ${tLeft}%;\n--text-size: ${tSize.toFixed(1)}rem;`);
             }
         });
     </script>
