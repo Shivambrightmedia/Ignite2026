@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ignite 2026 - Admin Dashboard</title>
+    <style>
+        :root {
+            --primary: #ff5722;
+            --secondary: #673ab7;
+            --bg: #0a0a0c;
+            --card-bg: #16161a;
+            --text: #ffffff;
+            --text-dim: #a0a0a0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Outfit', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .admin-card {
+            background: var(--card-bg);
+            width: 100%;
+            max-width: 500px;
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.subtitle {
+            color: var(--text-dim);
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--text-dim);
+        }
+
+        select, input {
+            width: 100%;
+            padding: 12px 16px;
+            background: #25252b;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        select:focus, input:focus {
+            border-color: var(--primary);
+        }
+
+        .btn-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        button span {
+            font-size: 12px;
+            opacity: 0.7;
+            font-weight: 400;
+        }
+
+        .btn-waiting { background: #333; color: white; }
+        .btn-live { background: var(--primary); color: white; }
+        .btn-resume { background: #fb8c00; color: white; }
+        .btn-thanks { background: var(--secondary); color: white; }
+
+        button:hover {
+            transform: translateY(-3px);
+            filter: brightness(1.2);
+        }
+
+        .output-box {
+            margin-top: 30px;
+            background: #000;
+            padding: 20px;
+            border-radius: 12px;
+            position: relative;
+        }
+
+        pre {
+            font-size: 13px;
+            color: #4caf50;
+            overflow-x: auto;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 6px 12px;
+            font-size: 11px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .current-status {
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 8px;
+            background: rgba(76, 175, 80, 0.1);
+            color: #4caf50;
+            font-size: 13px;
+            text-align: center;
+            border: 1px solid rgba(76, 175, 80, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="admin-card">
+        <h1>Event Control Panel</h1>
+        <p class="subtitle">Update the stream state for all devices.</p>
+
+        <div id="liveStatus" class="current-status">
+            Fetching current status...
+        </div>
+
+        <div class="form-group">
+            <label>Vimeo Video ID (Required for Live)</label>
+            <input type="text" id="videoId" placeholder="e.g. 1045236741" value="">
+        </div>
+
+        <label>Quick Actions</label>
+        <div class="btn-grid">
+            <button class="btn-waiting" onclick="updateJson('waiting')">
+                Set Waiting
+                <span>Show Start Image</span>
+            </button>
+            <button class="btn-live" onclick="updateJson('live')">
+                Go Live
+                <span>Show Video Stream</span>
+            </button>
+            <button class="btn-resume" onclick="updateJson('resume')">
+                Set Resume
+                <span>Show 30m Message</span>
+            </button>
+            <button class="btn-thanks" onclick="updateJson('thanks')">
+                Show Thanks
+                <span>End Stream</span>
+            </button>
+        </div>
+
+        <div class="output-box">
+            <div class="copy-btn" onclick="copyJson()">Copy to Clipboard</div>
+            <pre id="jsonOutput">{
+    "status": "waiting",
+    "videoId": ""
+}</pre>
+        </div>
+        <p style="font-size: 12px; color: var(--text-dim); margin-top: 15px; text-align: center;">
+            Copy this and paste it into <b>status.json</b> to update all devices.
+        </p>
+    </div>
+
+    <script>
+        const videoInput = document.getElementById('videoId');
+        const jsonOutput = document.getElementById('jsonOutput');
+        const liveStatus = document.getElementById('liveStatus');
+
+        function updateJson(status) {
+            const videoId = videoInput.value;
+            const config = {
+                status: status,
+                videoId: status === 'live' ? videoId : ""
+            };
+
+            jsonOutput.innerText = JSON.stringify(config, null, 4);
+        }
+
+        function copyJson() {
+            navigator.clipboard.writeText(jsonOutput.innerText);
+            const btn = document.querySelector('.copy-btn');
+            btn.innerText = 'Copied!';
+            setTimeout(() => btn.innerText = 'Copy to Clipboard', 2000);
+        }
+
+        // Fetch current live status
+        async function fetchStatus() {
+            try {
+                const res = await fetch('status.json?t=' + Date.now());
+                const data = await res.json();
+                liveStatus.innerText = "Current Status: " + data.status.toUpperCase() + (data.videoId ? " (" + data.videoId + ")" : "");
+            } catch (e) {
+                liveStatus.innerText = "Status: Error fetching or file not found.";
+            }
+        }
+
+        fetchStatus();
+    </script>
+</body>
+</html>
