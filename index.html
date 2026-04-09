@@ -219,14 +219,14 @@
             const iframe = document.createElement('iframe');
             
             // Smart URL detection: Use event embed for shorter IDs (common for Vimeo Live Events)
-            // Regular videos usually have 9-10 digits.
+            // Interaction URL supports chat/polls if enabled in the Vimeo event
             const isEvent = videoId.toString().length < 9;
             const embedUrl = isEvent 
-                ? `https://vimeo.com/event/${videoId}/embed`
+                ? `https://vimeo.com/event/${videoId}/embed/interaction`
                 : `https://player.vimeo.com/video/${videoId}?autoplay=1&title=0&byline=0&portrait=0`;
 
             iframe.src = embedUrl;
-            iframe.allow = "autoplay; fullscreen; picture-in-picture";
+            iframe.allow = "autoplay; fullscreen; picture-in-picture; encrypted-media; web-share";
             iframe.style.width = '100%';
             iframe.style.height = '100%';
             iframe.style.border = 'none';
