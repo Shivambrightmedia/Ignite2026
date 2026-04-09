@@ -309,28 +309,26 @@
         window.addEventListener('keydown', (e) => {
             const step = 0.5;
             
-            // Logo Controls (Arrows + 1/2)
-            if (e.key === 'ArrowUp') lTop -= step;
-            if (e.key === 'ArrowDown') lTop += step;
-            if (e.key === 'ArrowLeft') lLeft -= step;
-            if (e.key === 'ArrowRight') lLeft += step;
-            if (e.key === '1') lWidth -= 10;
-            if (e.key === '2') lWidth += 10;
+            // Text Controls (Arrows + 1/2)
+            if (e.key === 'ArrowUp') tTop -= step;
+            if (e.key === 'ArrowDown') tTop += step;
+            if (e.key === 'ArrowLeft') tLeft -= step;
+            if (e.key === 'ArrowRight') tLeft += step;
+            if (e.key === '1') tSize -= 0.1;
+            if (e.key === '2') tSize += 0.1;
 
-            // Text Controls (W/A/S/D + 9/0)
-            if (e.code === 'KeyW') tTop -= step;
-            if (e.code === 'KeyS') tTop += step;
-            if (e.code === 'KeyA') tLeft -= step;
-            if (e.code === 'KeyD') tLeft += step;
-            if (e.key === '9') tSize -= 0.1;
-            if (e.key === '0') tSize += 0.1;
+            // Logo Controls (W/A/S/D + 9/0)
+            if (e.code === 'KeyW') lTop -= step;
+            if (e.code === 'KeyS') lTop += step;
+            if (e.code === 'KeyA') lLeft -= step;
+            if (e.code === 'KeyD') lLeft += step;
+            if (e.key === '9') lWidth -= 10;
+            if (e.key === '0') lWidth += 10;
 
-            // Apply Logo Changes
+            // Apply All Changes
             document.documentElement.style.setProperty('--logo-top', lTop + '%');
             document.documentElement.style.setProperty('--logo-left', lLeft + '%');
             document.documentElement.style.setProperty('--logo-width', lWidth + 'px');
-            
-            // Apply Text Changes
             document.documentElement.style.setProperty('--text-top', tTop + '%');
             document.documentElement.style.setProperty('--text-left', tLeft + '%');
             document.documentElement.style.setProperty('--text-size', tSize + 'rem');
@@ -338,10 +336,10 @@
             if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', '1', '2', 'KeyW', 'KeyS', 'KeyA', 'KeyD', '9', '0'].includes(e.key) || e.code.startsWith('Key')) {
                 console.clear();
                 console.log(`%c CURRENT CONFIG:`, 'color: #ff5722; font-weight: bold; font-size: 14px;');
-                console.log(`%c LOGO:`, 'color: #fff; font-weight: bold;');
-                console.log(`--logo-top: ${lTop}%;\n--logo-left: ${lLeft}%;\n--logo-width: ${lWidth}px;`);
                 console.log(`%c TEXT:`, 'color: #fff; font-weight: bold;');
                 console.log(`--text-top: ${tTop}%;\n--text-left: ${tLeft}%;\n--text-size: ${tSize.toFixed(1)}rem;`);
+                console.log(`%c LOGO:`, 'color: #fff; font-weight: bold;');
+                console.log(`--logo-top: ${lTop}%;\n--logo-left: ${lLeft}%;\n--logo-width: ${lWidth}px;`);
             }
         });
     </script>
