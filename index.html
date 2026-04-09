@@ -19,13 +19,19 @@
             --text-color: #ffffff;
             --accent-color: #ff5722;
 
-            /* LOGO ADJUSTMENT (PERMANENT) */
+            /* LOGO ADJUSTMENT (MAIN PAGES) */
             --logo-top: 16%;
             --logo-left: -0.5%;
             --logo-width: 940px;
+
+            /* LOGO ADJUSTMENT (LIVE STREAM PAGE) */
+            --logo-stream-top: 5%;
+            --logo-stream-left: 0%;
+            --logo-stream-width: 200px;
+
             --logo-opacity: 1;
 
-            /* TEXT ADJUSTMENT (PERMANENT) */
+            /* TEXT ADJUSTMENT (MAIN PAGES) */
             --text-top: 54%;
             --text-left: 94.5%;
             --text-size: 3.9rem;
@@ -115,6 +121,11 @@
             z-index: 10;
         }
 
+        .branding-overlay.live-mode {
+            top: var(--logo-stream-top);
+            left: var(--logo-stream-left);
+        }
+
         .event-logo {
             width: auto;
             max-width: var(--logo-width);
@@ -123,6 +134,10 @@
             opacity: var(--logo-opacity);
             filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.5));
             transition: max-width 0.1s;
+        }
+
+        .branding-overlay.live-mode .event-logo {
+            max-width: var(--logo-stream-width);
         }
 
         .status-content {
@@ -194,6 +209,8 @@
         const videoContainer = document.getElementById('videoContainer');
         const statusText = document.getElementById('statusText');
         const statusContent = document.getElementById('statusContent');
+        const brandingOverlay = document.querySelector('.branding-overlay');
+
 
         /**
          * Loads a Vimeo video into the placeholder area
@@ -225,6 +242,8 @@
             mainBg.style.backgroundImage = "url('Images/Event will start 3pm.png')";
             videoContainer.innerHTML = '';
             statusContent.style.display = 'block';
+            brandingOverlay.style.display = 'flex';
+            brandingOverlay.classList.remove('live-mode');
             statusText.innerText = "EVENT WILL START @3:00PM ON 11TH APRIL, 2026";
         }
 
@@ -234,6 +253,9 @@
          */
         function startLive(videoId) {
             mainBg.style.backgroundImage = "url('Images/videostream.png')";
+            statusContent.style.display = 'none';
+            brandingOverlay.style.display = 'flex';
+            brandingOverlay.classList.add('live-mode');
             loadVideo(videoId);
         }
 
@@ -242,8 +264,10 @@
          */
         function showThankYou() {
             mainBg.style.backgroundImage = "url('Images/thankyou for watching.png')";
-            videoContainer.innerHTML = '';
+            videoContainer.innerHTML = ''; 
             statusContent.style.display = 'block';
+            brandingOverlay.style.display = 'flex';
+            brandingOverlay.classList.remove('live-mode');
             statusText.innerText = "THANK YOU FOR WATCHING";
         }
 
@@ -254,8 +278,73 @@
             mainBg.style.backgroundImage = "url('Images/Stream will resume in 30 mins.png')";
             videoContainer.innerHTML = '';
             statusContent.style.display = 'block';
+            brandingOverlay.style.display = 'flex';
+            brandingOverlay.classList.remove('live-mode');
             statusText.innerText = "STREAMING WILL RESUME IN 30 MINS";
         }
+
+        /**
+         * VISUAL ADJUSTER - STATE AWARE
+         */
+        let lTop = 16; let lLeft = -0.5; let lWidth = 940; // Main
+        let sTop = 5; let sLeft = 0; let sWidth = 200;    // Stream
+        let tTop = 54; let tLeft = 94.5; let tSize = 3.9;  // Text
+
+        window.addEventListener('keydown', (e) => {
+            const step = 0.5;
+            const isLive = currentStatus === 'live';
+
+            if (isLive) {
+                // Adjust STREAM Logo with W/A/S/D + 9/0
+                if (e.code === 'KeyW') sTop -= step;
+                if (e.code === 'KeyS') sTop += step;
+                if (e.code === 'KeyA') sLeft -= step;
+                if (e.code === 'KeyD') sLeft += step;
+                if (e.key === '9') sWidth -= 10;
+                if (e.key === '0') sWidth += 10;
+                
+                document.documentElement.style.setProperty('--logo-stream-top', sTop + '%');
+                document.documentElement.style.setProperty('--logo-stream-left', sLeft + '%');
+                document.documentElement.style.setProperty('--logo-stream-width', sWidth + 'px');
+            } else {
+                // Adjust MAIN Logo with W/A/S/D + 9/0
+                if (e.code === 'KeyW') lTop -= step;
+                if (e.code === 'KeyS') lTop += step;
+                if (e.code === 'KeyA') lLeft -= step;
+                if (e.code === 'KeyD') lLeft += step;
+                if (e.key === '9') lWidth -= 10;
+                if (e.key === '0') lWidth += 10;
+
+                // Adjust TEXT with Arrows + 1/2
+                if (e.key === 'ArrowUp') tTop -= step;
+                if (e.key === 'ArrowDown') tTop += step;
+                if (e.key === 'ArrowLeft') tLeft -= step;
+                if (e.key === 'ArrowRight') tLeft += step;
+                if (e.key === '1') tSize -= 0.1;
+                if (e.key === '2') tSize += 0.1;
+
+                document.documentElement.style.setProperty('--logo-top', lTop + '%');
+                document.documentElement.style.setProperty('--logo-left', lLeft + '%');
+                document.documentElement.style.setProperty('--logo-width', lWidth + 'px');
+                document.documentElement.style.setProperty('--text-top', tTop + '%');
+                document.documentElement.style.setProperty('--text-left', tLeft + '%');
+                document.documentElement.style.setProperty('--text-size', tSize + 'rem');
+            }
+
+            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', '1', '2', 'KeyW', 'KeyS', 'KeyA', 'KeyD', '9', '0'].includes(e.key) || e.code.startsWith('Key')) {
+                console.clear();
+                console.log(`%c CURRENT CONFIG (${currentStatus.toUpperCase()} MODE):`, 'color: #ff5722; font-weight: bold; font-size: 14px;');
+                if (isLive) {
+                    console.log(`%c LIVE LOGO:`, 'color: #fff; font-weight: bold;');
+                    console.log(`--logo-stream-top: ${sTop}%;\n--logo-stream-left: ${sLeft}%;\n--logo-stream-width: ${sWidth}px;`);
+                } else {
+                    console.log(`%c LOGO:`, 'color: #fff; font-weight: bold;');
+                    console.log(`--logo-top: ${lTop}%;\n--logo-left: ${lLeft}%;\n--logo-width: ${lWidth}px;`);
+                    console.log(`%c TEXT:`, 'color: #fff; font-weight: bold;');
+                    console.log(`--text-top: ${tTop}%;\n--text-left: ${tLeft}%;\n--text-size: ${tSize.toFixed(1)}rem;`);
+                }
+            }
+        });
 
         /**
          * FIREBASE REAL-TIME INTEGRATION
