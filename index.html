@@ -25,10 +25,10 @@
             --logo-width: 940px;
             --logo-opacity: 1;
 
-            /* TEXT ADJUSTMENT VARIABLES */
-            --text-top: 50%;
-            --text-left: 50%;
-            --text-size: 2.8rem;
+            /* TEXT ADJUSTMENT (PERMANENT) */
+            --text-top: 54%;
+            --text-left: 94.5%;
+            --text-size: 3.9rem;
 
             /* 
                ADJUST VIDEO POSITIONING HERE 
@@ -257,13 +257,6 @@
             statusText.innerText = "STREAMING WILL RESUME IN 30 MINS";
         }
 
-        // Expose functions to window for console testing
-        window.loadVideo = loadVideo;
-        window.showWaitingScreen = showWaitingScreen;
-        window.startLive = startLive;
-        window.showThankYou = showThankYou;
-        window.showResumeScreen = showResumeScreen;
-
         /**
          * FIREBASE REAL-TIME INTEGRATION
          */
@@ -307,53 +300,6 @@
             }
         });
 
-        /**
-         * VISUAL ADJUSTER (FOR ADMIN)
-         */
-        let lTop = 16;
-        let lLeft = -0.5;
-        let lWidth = 940;
-
-        let tTop = 50;
-        let tLeft = 50;
-        let tSize = 2.8;
-
-        window.addEventListener('keydown', (e) => {
-            const step = 0.5;
-
-            // Text Controls (Arrows + 1/2)
-            if (e.key === 'ArrowUp') tTop -= step;
-            if (e.key === 'ArrowDown') tTop += step;
-            if (e.key === 'ArrowLeft') tLeft -= step;
-            if (e.key === 'ArrowRight') tLeft += step;
-            if (e.key === '1') tSize -= 0.1;
-            if (e.key === '2') tSize += 0.1;
-
-            // Logo Controls (W/A/S/D + 9/0)
-            if (e.code === 'KeyW') lTop -= step;
-            if (e.code === 'KeyS') lTop += step;
-            if (e.code === 'KeyA') lLeft -= step;
-            if (e.code === 'KeyD') lLeft += step;
-            if (e.key === '9') lWidth -= 10;
-            if (e.key === '0') lWidth += 10;
-
-            // Apply All Changes
-            document.documentElement.style.setProperty('--logo-top', lTop + '%');
-            document.documentElement.style.setProperty('--logo-left', lLeft + '%');
-            document.documentElement.style.setProperty('--logo-width', lWidth + 'px');
-            document.documentElement.style.setProperty('--text-top', tTop + '%');
-            document.documentElement.style.setProperty('--text-left', tLeft + '%');
-            document.documentElement.style.setProperty('--text-size', tSize + 'rem');
-
-            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', '1', '2', 'KeyW', 'KeyS', 'KeyA', 'KeyD', '9', '0'].includes(e.key) || e.code.startsWith('Key')) {
-                console.clear();
-                console.log(`%c CURRENT CONFIG:`, 'color: #ff5722; font-weight: bold; font-size: 14px;');
-                console.log(`%c TEXT:`, 'color: #fff; font-weight: bold;');
-                console.log(`--text-top: ${tTop}%;\n--text-left: ${tLeft}%;\n--text-size: ${tSize.toFixed(1)}rem;`);
-                console.log(`%c LOGO:`, 'color: #fff; font-weight: bold;');
-                console.log(`--logo-top: ${lTop}%;\n--logo-left: ${lLeft}%;\n--logo-width: ${lWidth}px;`);
-            }
-        });
     </script>
 </body>
 
