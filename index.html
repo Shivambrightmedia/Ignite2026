@@ -53,23 +53,34 @@
         .event-wrapper {
             position: relative;
             width: 100%;
-            margin: 0 auto;
-            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--bg-color);
         }
 
         /* 
-           This div maintains the aspect ratio of your background image.
-           The padding-bottom hack is used here. 
+           This div maintains the aspect ratio and fits within the viewport.
         */
         .background-container {
             position: relative;
             width: 100%;
-            padding-bottom: var(--aspect-ratio-padding);
+            max-width: 100vw;
+            max-height: 100vh;
+            aspect-ratio: 16 / 9; /* Matches common desktop background ratio */
             background-image: url('Images/Event will start 3pm.png');
-            /* Default background image */
-            background-size: cover;
+            background-size: contain;
             background-position: center;
+            background-repeat: no-repeat;
             transition: background-image 0.5s ease-in-out;
+        }
+
+        /* Support for older browsers that don't like aspect-ratio */
+        @supports not (aspect-ratio: 16 / 9) {
+            .background-container {
+                padding-bottom: 56.25%; 
+            }
         }
 
         /* 
@@ -190,8 +201,36 @@
             videoContainer.innerHTML = '';
         }
 
-        // Example Usage (You can call these from your console or based on time)
-        // startLive('YOUR_VIMEO_ID');
+        /**
+         * AUTO-STATE CONTROLLER
+         * Checks status.json every 10 seconds to switch states for all users
+         */
+        let currentStatus = 'waiting';
+        async function checkStatus() {
+            try {
+                const response = await fetch('status.json?t=' + Date.now());
+                const data = await response.json();
+                
+                if (data.status !== currentStatus) {
+                    currentStatus = data.status;
+                    if (data.status === 'live') {
+                        startLive(data.videoId);
+                    } else if (data.status === 'resume') {
+                        showResumeScreen();
+                    } else if (data.status === 'thanks') {
+                        showThankYou();
+                    } else {
+                        showWaitingScreen();
+                    }
+                }
+            } catch (e) {
+                console.log("Status file not found yet or error parsing.");
+            }
+        }
+
+        // Start checking every 10 seconds
+        setInterval(checkStatus, 10000);
+        checkStatus(); // Initial check
     </script>
 </body>
 
