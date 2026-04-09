@@ -150,7 +150,9 @@
         const logoWrap = document.getElementById('logoWrap');
 
         function loadVideo(id) {
+            if (!id) return;
             const isEv = id.toString().length < 9;
+
             const url = isEv ? `https://vimeo.com/event/${id}/embed/interaction` : `https://player.vimeo.com/video/${id}?autoplay=1&title=0&byline=0&portrait=0`;
             videoContainer.innerHTML = `<iframe src="${url}" allow="autoplay; fullscreen; picture-in-picture; encrypted-media; web-share" style="width:100%;height:100%;border:none;"></iframe>`;
         }
