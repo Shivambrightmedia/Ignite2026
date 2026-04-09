@@ -37,17 +37,22 @@
             --text-size: 3.9rem;
 
             /* 
+               MOBILE ADJUSTMENTS 
+            */
+            --mobile-logo-top: 25%;
+            --mobile-logo-width: 80%;
+            --mobile-text-top: 65%;
+            --mobile-text-size: 1.8rem;
+
+            /* 
                ADJUST VIDEO POSITIONING HERE 
-               Values are in % relative to the background image
             */
             --video-top: 22.5%;
             --video-left: 15%;
             --video-width: 70%;
             --video-height: 75.5%;
 
-
-            /* Aspect ratio of your background image (Background Width / Background Height) */
-            /* Defaulting to 16:9 (100 / 56.25) */
+            /* Aspect ratio padding */
             --aspect-ratio-padding: 56.25%;
         }
 
@@ -68,7 +73,7 @@
             overflow: hidden;
         }
 
-        /* Main container that holds everything */
+        /* Main container */
         .event-wrapper {
             position: relative;
             width: 100%;
@@ -90,10 +95,7 @@
             transition: background-image 0.5s ease-in-out;
         }
 
-        /* 
-           Video Overlay Container
-           This is positioned absolutely on top of the placeholder area.
-        */
+        /* Video Overlay */
         .video-overlay {
             position: absolute;
             top: var(--video-top);
@@ -107,7 +109,6 @@
             z-index: 5;
         }
 
-        /* Branding and Text Styles */
         .branding-overlay {
             position: absolute;
             top: var(--logo-top);
@@ -127,7 +128,7 @@
             width: auto;
             max-width: var(--logo-width);
             height: auto;
-            max-height: 200px;
+            max-height: 250px;
             opacity: var(--logo-opacity);
             filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.5));
             transition: max-width 0.1s;
@@ -158,139 +159,135 @@
         }
 
         @keyframes fadeInOut {
-            from {
-                opacity: 0.8;
-                transform: translate(-50%, -50%) scale(0.98);
-            }
-
-            to {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(1);
-            }
+            from { opacity: 0.8; transform: scale(0.98); }
+            to { opacity: 1; transform: scale(1); }
         }
 
+        /* 
+           MOBILE RESPONSIVENESS 
+        */
         @media (max-width: 768px) {
-            .event-logo {
-                max-width: 250px;
+            #mainBg {
+                background-image: url('Images/1920x1080.png') !important;
+                background-size: contain;
+                background-position: center;
             }
-
+            .branding-overlay {
+                top: var(--mobile-logo-top) !important;
+                left: 0 !important;
+            }
+            .event-logo {
+                max-width: var(--mobile-logo-width) !important;
+                max-height: 180px;
+            }
+            .status-content {
+                top: var(--mobile-text-top) !important;
+                left: 50% !important;
+            }
             .status-text {
-                font-size: 1.5rem;
+                font-size: var(--mobile-text-size) !important;
+            }
+            .video-overlay {
+                top: 40% !important;
+                left: 5% !important;
+                width: 90% !important;
+                height: auto !important;
+                aspect-ratio: 16/9;
             }
         }
     </style>
 </head>
 
 <body>
-
     <div class="event-wrapper" id="appWrapper" style="display: none;">
         <div id="mainBg" class="background-container">
-            <!-- Branding Overlay -->
             <div class="branding-overlay">
                 <img src="Images/Truhome finance ignite logo.png" class="event-logo" alt="Ignite 2026">
             </div>
-
-            <!-- Content Area (Center) -->
             <div id="statusContent" class="status-content">
                 <h1 id="statusText" class="status-text">EVENT WILL START @3:00PM ON 11TH APRIL, 2026</h1>
             </div>
-
-            <!-- Video Overlay -->
-            <div id="videoContainer" class="video-overlay">
-            </div>
+            <div id="videoContainer" class="video-overlay"></div>
         </div>
     </div>
 
     <script type="module">
+        /**
+         * VISUAL ADJUSTER - MOBILE & DESKTOP AWARE
+         */
+        let logoTop = 16; let logoWidth = 940; 
+        let mLogoTop = 25; let mLogoWidth = 80;
+
+        window.addEventListener('keydown', (e) => {
+            const isMobile = window.innerWidth <= 768;
+            const step = e.shiftKey ? 2 : 0.5;
+
+            if (isMobile) {
+                if (e.code === 'KeyW') mLogoTop -= step;
+                if (e.code === 'KeyS') mLogoTop += step;
+                if (e.key === '9') mLogoWidth -= 2;
+                if (e.key === '0') mLogoWidth += 2;
+                document.documentElement.style.setProperty('--mobile-logo-top', mLogoTop + '%');
+                document.documentElement.style.setProperty('--mobile-logo-width', mLogoWidth + '%');
+                console.log(`MOBILE LOGO: --mobile-logo-top: ${mLogoTop}%; --mobile-logo-width: ${mLogoWidth}%;`);
+            } else {
+                if (e.code === 'KeyW') logoTop -= step;
+                if (e.code === 'KeyS') logoTop += step;
+                if (e.key === '9') logoWidth -= 10;
+                if (e.key === '0') logoWidth += 10;
+                document.documentElement.style.setProperty('--logo-top', logoTop + '%');
+                document.documentElement.style.setProperty('--logo-width', logoWidth + 'px');
+                console.log(`DESKTOP LOGO: --logo-top: ${logoTop}%; --logo-width: ${logoWidth}px;`);
+            }
+        });
+
         const mainBg = document.getElementById('mainBg');
         const videoContainer = document.getElementById('videoContainer');
         const statusText = document.getElementById('statusText');
         const statusContent = document.getElementById('statusContent');
         const brandingOverlay = document.querySelector('.branding-overlay');
 
-
-        /**
-         * Loads a Vimeo video into the placeholder area
-         * @param {string} videoId - The Vimeo video ID
-         */
         function loadVideo(videoId) {
             if (!videoId) return;
-
             const iframe = document.createElement('iframe');
-
-            // Smart URL detection: Use event embed for shorter IDs (common for Vimeo Live Events)
-            // Interaction URL supports chat/polls if enabled in the Vimeo event
             const isEvent = videoId.toString().length < 9;
             const embedUrl = isEvent
                 ? `https://vimeo.com/event/${videoId}/embed/interaction`
                 : `https://player.vimeo.com/video/${videoId}?autoplay=1&title=0&byline=0&portrait=0`;
-
             iframe.src = embedUrl;
             iframe.allow = "autoplay; fullscreen; picture-in-picture; encrypted-media; web-share";
-            iframe.style.width = '100%';
-            iframe.style.height = '100%';
-            iframe.style.border = 'none';
-
-            // Clear placeholder and add iframe
-            videoContainer.innerHTML = '';
-            videoContainer.appendChild(iframe);
-
-            // Hide status text when video is live
+            iframe.style.width = '100%'; iframe.style.height = '100%'; iframe.style.border = 'none';
+            videoContainer.innerHTML = ''; videoContainer.appendChild(iframe);
             statusContent.style.display = 'none';
         }
 
-        /**
-         * Switches to the waiting screen
-         */
         function showWaitingScreen() {
             mainBg.style.backgroundImage = "url('Images/Event will start 3pm.png')";
-            videoContainer.innerHTML = '';
-            statusContent.style.display = 'block';
-            brandingOverlay.style.display = 'flex';
-            brandingOverlay.classList.remove('live-mode');
+            videoContainer.innerHTML = ''; statusContent.style.display = 'block';
+            brandingOverlay.style.display = 'flex'; brandingOverlay.classList.remove('live-mode');
             statusText.innerText = "EVENT WILL START @3:00PM ON 11TH APRIL, 2026";
         }
 
-        /**
-         * Starts the live stream and switches to the live background
-         * @param {string} videoId 
-         */
         function startLive(videoId) {
             mainBg.style.backgroundImage = "url('Images/videostream.png')";
-            statusContent.style.display = 'none';
-            brandingOverlay.style.display = 'flex';
-            brandingOverlay.classList.add('live-mode');
-            loadVideo(videoId);
+            statusContent.style.display = 'none'; brandingOverlay.style.display = 'flex';
+            brandingOverlay.classList.add('live-mode'); loadVideo(videoId);
         }
 
-        /**
-         * Switches to the thank you screen
-         */
         function showThankYou() {
             mainBg.style.backgroundImage = "url('Images/thankyou for watching.png')";
-            videoContainer.innerHTML = '';
-            statusContent.style.display = 'block';
-            brandingOverlay.style.display = 'flex';
-            brandingOverlay.classList.remove('live-mode');
+            videoContainer.innerHTML = ''; statusContent.style.display = 'block';
+            brandingOverlay.style.display = 'flex'; brandingOverlay.classList.remove('live-mode');
             statusText.innerText = "THANK YOU FOR WATCHING";
         }
 
-        /**
-         * Switches to the pause/resume screen
-         */
         function showResumeScreen() {
             mainBg.style.backgroundImage = "url('Images/Stream will resume in 30 mins.png')";
-            videoContainer.innerHTML = '';
-            statusContent.style.display = 'block';
-            brandingOverlay.style.display = 'flex';
-            brandingOverlay.classList.remove('live-mode');
+            videoContainer.innerHTML = ''; statusContent.style.display = 'block';
+            brandingOverlay.style.display = 'flex'; brandingOverlay.classList.remove('live-mode');
             statusText.innerText = "STREAMING WILL RESUME IN 30 MINS";
         }
 
-
-        /**
-         * FIREBASE REAL-TIME INTEGRATION
-         */
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
@@ -303,35 +300,23 @@
             messagingSenderId: "301380534120",
             appId: "1:301380534120:web:0acad3ac76d4523d7a20dd"
         };
-
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
         const statusRef = ref(db, 'event/status');
 
         let currentStatus = null;
-
         onValue(statusRef, (snapshot) => {
             const data = snapshot.val();
             if (!data) return;
-
-            // Show app once first data is received
             document.getElementById('appWrapper').style.display = 'flex';
-
             if (data.status !== currentStatus) {
                 currentStatus = data.status;
-                if (data.status === 'live') {
-                    startLive(data.videoId);
-                } else if (data.status === 'resume') {
-                    showResumeScreen();
-                } else if (data.status === 'thanks') {
-                    showThankYou();
-                } else {
-                    showWaitingScreen();
-                }
+                if (data.status === 'live') startLive(data.videoId);
+                else if (data.status === 'resume') showResumeScreen();
+                else if (data.status === 'thanks') showThankYou();
+                else showWaitingScreen();
             }
         });
-
     </script>
 </body>
-
 </html>
