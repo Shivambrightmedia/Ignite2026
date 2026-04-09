@@ -67,11 +67,12 @@
             top: var(--text-top); 
             left: var(--text-left);
             transform: translate(-50%, -50%); 
-            width: 80%; 
-            max-width: 1200px;
+            width: auto; 
             text-align: center; 
             z-index: 8;
+            white-space: nowrap;
         }
+
 
 
         .status-text {
@@ -99,7 +100,10 @@
             .status-text { 
                 font-size: var(--m-text-size) !important; 
                 white-space: normal !important; 
+                line-height: 1.6 !important;
+                letter-spacing: 1px !important;
             }
+
             .video-overlay { top: var(--m-video-top) !important; left: var(--m-video-left) !important; width: var(--m-video-width) !important; height: var(--m-video-height) !important; }
         }
     </style>
