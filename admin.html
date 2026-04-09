@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -37,8 +38,8 @@
             max-width: 500px;
             padding: 40px;
             border-radius: 24px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         h1 {
@@ -71,7 +72,7 @@
             width: 100%;
             padding: 12px 16px;
             background: #25252b;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
             color: white;
             font-size: 16px;
@@ -109,10 +110,25 @@
             font-weight: 400;
         }
 
-        .btn-waiting { background: #333; color: white; }
-        .btn-live { background: var(--primary); color: white; }
-        .btn-resume { background: #fb8c00; color: white; }
-        .btn-thanks { background: var(--secondary); color: white; }
+        .btn-waiting {
+            background: #333;
+            color: white;
+        }
+
+        .btn-live {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-resume {
+            background: #fb8c00;
+            color: white;
+        }
+
+        .btn-thanks {
+            background: var(--secondary);
+            color: white;
+        }
 
         button:hover {
             transform: translateY(-3px);
@@ -131,6 +147,7 @@
         }
     </style>
 </head>
+
 <body>
 
     <div class="admin-card">
@@ -166,7 +183,8 @@
             </button>
         </div>
 
-        <p id="saveMessage" style="font-size: 12px; color: #4caf50; margin-top: 15px; text-align: center; display: none;">
+        <p id="saveMessage"
+            style="font-size: 12px; color: #4caf50; margin-top: 15px; text-align: center; display: none;">
             Status Updated Successfully!
         </p>
     </div>
@@ -200,7 +218,7 @@
                     status: status,
                     videoId: status === 'live' ? videoId : ""
                 });
-                
+
                 saveMessage.style.display = 'block';
                 setTimeout(() => saveMessage.style.display = 'none', 3000);
             } catch (error) {
@@ -224,4 +242,5 @@
         });
     </script>
 </body>
+
 </html>
