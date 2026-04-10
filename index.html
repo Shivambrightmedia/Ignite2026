@@ -27,7 +27,6 @@
             --text-left: 50%;
             --text-size: 3.5rem;
 
-
             --video-top: 22.5%;
             --video-left: 15%;
             --video-width: 70%;
@@ -180,7 +179,8 @@
         /* --- TABLET MODE (NEW) --- */
         @media (min-width: 769px) and (max-width: 1024px) {
             #mainBg {
-                background-image: url('Images/Event will start 3pm.png') !important; /* Default desktop background for tablet */
+                background-image: url('Images/Event will start 3pm.png') !important;
+                /* Default desktop background for tablet */
                 background-size: cover;
             }
 
@@ -271,17 +271,38 @@
         }
 
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getDatabase, ref, onValue, push, onDisconnect, set, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getAnalytics, logEvent } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyB5tWsfjCTbh1KO5X2xZQeX2SwTZ9dJcs8",
             authDomain: "ignite2026-bf820.firebaseapp.com",
             databaseURL: "https://ignite2026-bf820-default-rtdb.asia-southeast1.firebasedatabase.app",
             projectId: "ignite2026-bf820",
-            storageBucket: "ignite2026-bf820.firebasestorage.app"
+            storageBucket: "ignite2026-bf820.firebasestorage.app",
+            appId: "1:301380534120:web:0acad3ac76d4523d7a20dd",
+            measurementId: "G-4GF6F6MG9H"
         };
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
+        const analytics = getAnalytics(app);
+
+        // Presence Logic
+        const connectedRef = ref(db, ".info/connected");
+        const viewersRef = ref(db, "viewers");
+        
+        onValue(connectedRef, (snap) => {
+            if (snap.val() === true) {
+                const myViewRef = push(viewersRef);
+                onDisconnect(myViewRef).remove();
+                set(myViewRef, {
+                    joinedAt: serverTimestamp(),
+                    userAgent: navigator.userAgent
+                });
+                logEvent(analytics, 'viewer_joined');
+            }
+        });
+
         const statusRef = ref(db, 'event/status');
 
         let curStatus = null;
@@ -290,7 +311,10 @@
             document.getElementById('appWrapper').style.display = 'flex';
             if (d.status !== curStatus) {
                 curStatus = d.status;
-                if (d.status === 'live') startLive(d.videoId);
+                if (d.status === 'live') {
+                    startLive(d.videoId);
+                    logEvent(analytics, 'stream_start', { videoId: d.videoId });
+                }
                 else if (d.status === 'resume') showResume();
                 else if (d.status === 'thanks') showThanks();
                 else showWaiting();

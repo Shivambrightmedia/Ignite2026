@@ -158,6 +158,10 @@
             Connecting to Firebase...
         </div>
 
+        <div id="viewerCount" style="text-align: center; margin-bottom: 25px; font-size: 14px; color: var(--text-dim);">
+            Live Viewers: <span id="countNum" style="color: #4caf50; font-weight: bold;">0</span>
+        </div>
+
         <div class="form-group">
             <label>Vimeo Video ID (Required for Live)</label>
             <input type="text" id="videoId" placeholder="e.g. 1045236741" value="">
@@ -192,6 +196,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyB5tWsfjCTbh1KO5X2xZQeX2SwTZ9dJcs8",
@@ -200,16 +205,28 @@
             projectId: "ignite2026-bf820",
             storageBucket: "ignite2026-bf820.firebasestorage.app",
             messagingSenderId: "301380534120",
-            appId: "1:301380534120:web:0acad3ac76d4523d7a20dd"
+            appId: "1:301380534120:web:0acad3ac76d4523d7a20dd",
+            measurementId: "G-4GF6F6MG9H"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
+        const analytics = getAnalytics(app);
+
         const statusRef = ref(db, 'event/status');
+        const viewersRef = ref(db, 'viewers');
 
         const videoInput = document.getElementById('videoId');
         const liveStatus = document.getElementById('liveStatus');
         const saveMessage = document.getElementById('saveMessage');
+        const countNum = document.getElementById('countNum');
+
+        // Monitor viewer count
+        onValue(viewersRef, (snapshot) => {
+            const data = snapshot.val();
+            const count = data ? Object.keys(data).length : 0;
+            countNum.innerText = count || 0;
+        });
 
         async function updateStatus(status) {
             const videoId = videoInput.value;
