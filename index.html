@@ -215,19 +215,22 @@
             }
         }
     </style>
-
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔥</text></svg>">
 </head>
 
 <body>
-    <div id="appWrapper" style="display: none;">
-        <div id="mainBg" class="background-container">
-            <div class="branding-overlay" id="logoWrap">
+    <div id="appWrapper" style="display: flex;">
+        <div id="mainBg" class="background-container" style="background-image: url('Images/videostream.png');">
+            <div class="branding-overlay live-mode" id="logoWrap">
                 <img src="Images/Truhome finance ignite logo.png" class="event-logo" alt="Ignite 2026">
             </div>
-            <div id="statusContent" class="status-content">
+            <div id="statusContent" class="status-content" style="display: none;">
                 <h1 id="statusText" class="status-text">EVENT WILL START @3:00PM ON 11TH APRIL, 2026</h1>
             </div>
-            <div id="videoContainer" class="video-overlay"></div>
+            <div id="videoContainer" class="video-overlay">
+                <!-- Fallback Iframe for immediate load -->
+                <iframe src="https://vimeo.com/event/5861082/embed/interaction" allow="autoplay; fullscreen; picture-in-picture; encrypted-media; web-share" style="width:100%;height:100%;border:none;"></iframe>
+            </div>
         </div>
     </div>
 
@@ -242,7 +245,6 @@
         function loadVideo(id) {
             if (!id) return;
             const isEv = id.toString().length < 9;
-
             const url = isEv ? `https://vimeo.com/event/${id}/embed/interaction` : `https://player.vimeo.com/video/${id}?autoplay=1&title=0&byline=0&portrait=0`;
             videoContainer.innerHTML = `<iframe src="${url}" allow="autoplay; fullscreen; picture-in-picture; encrypted-media; web-share" style="width:100%;height:100%;border:none;"></iframe>`;
         }
@@ -255,7 +257,9 @@
 
         function startLive(id) {
             mainBg.style.backgroundImage = "url('Images/videostream.png')";
-            statusContent.style.display = 'none'; logoWrap.classList.add('live-mode'); loadVideo(id);
+            statusContent.style.display = 'none'; 
+            logoWrap.classList.add('live-mode'); 
+            loadVideo(id);
         }
 
         function showThanks() {
@@ -287,7 +291,7 @@
         const db = getDatabase(app);
         const analytics = getAnalytics(app);
 
-        // Presence Logic
+        // Presence Logic - Background only, won't block UI if it fails
         const connectedRef = ref(db, ".info/connected");
         const viewersRef = ref(db, "viewers");
         
@@ -295,31 +299,26 @@
             if (snap.val() === true) {
                 const myViewRef = push(viewersRef);
                 onDisconnect(myViewRef).remove();
-                set(myViewRef, {
-                    joinedAt: serverTimestamp(),
-                    userAgent: navigator.userAgent
-                });
-                logEvent(analytics, 'viewer_joined');
+                set(myViewRef, { joinedAt: serverTimestamp() });
             }
         });
 
+        // Firebase Status Listener - Disabled to ensure the "Forced Live" state is not overwritten
+        /*
         const statusRef = ref(db, 'event/status');
-
         let curStatus = null;
         onValue(statusRef, (s) => {
-            const d = s.val(); if (!d) return;
-            document.getElementById('appWrapper').style.display = 'flex';
-            if (d.status !== curStatus) {
-                curStatus = d.status;
-                if (d.status === 'live') {
-                    startLive(d.videoId);
-                    logEvent(analytics, 'stream_start', { videoId: d.videoId });
-                }
-                else if (d.status === 'resume') showResume();
-                else if (d.status === 'thanks') showThanks();
-                else showWaiting();
-            }
+             const d = s.val(); if (!d) return;
+             if (d.status !== curStatus) {
+                 curStatus = d.status;
+                 if (d.status === 'live') startLive(d.videoId);
+                 else if (d.status === 'resume') showResume();
+                 else if (d.status === 'thanks') showThanks();
+                 else showWaiting();
+             }
         });
+        */
+
     </script>
 </body>
 
