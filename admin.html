@@ -145,6 +145,36 @@
             text-align: center;
             border: 1px solid rgba(76, 175, 80, 0.2);
         }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 15px;
+            }
+
+            .admin-card {
+                padding: 25px 20px;
+                border-radius: 16px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+
+            .btn-grid {
+                grid-template-columns: 1fr;
+            }
+
+            button {
+                padding: 12px;
+                flex-direction: row;
+                justify-content: space-between;
+                text-align: left;
+            }
+
+            button span {
+                text-align: right;
+            }
+        }
     </style>
 </head>
 

@@ -138,41 +138,67 @@
 
         /* --- MOBILE MODE (Completely Separate) --- */
         @media (max-width: 768px) {
-            #mainBg {
-                background-image: url('Images/1920x1080.png') !important;
-                background-size: cover;
-                background-position: center top;
+            body {
+                overflow: auto;
+                background: #000;
+            }
+            .background-container {
+                height: 100vh;
+                min-height: 600px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                padding-top: 60px;
+                background-attachment: fixed;
             }
 
             .branding-overlay {
-                top: var(--m-logo-top) !important;
+                position: relative !important;
+                top: 0 !important;
                 left: 0 !important;
+                margin-bottom: 40px;
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                z-index: 10;
             }
 
             .event-logo {
-                max-width: var(--m-logo-width) !important;
-                max-height: 150px;
-            }
-
-            .status-content {
-                top: var(--m-text-top) !important;
-                left: 0 !important;
-                width: 100% !important;
-                transform: translateY(-50%) !important;
-            }
-
-            .status-text {
-                font-size: var(--m-text-size) !important;
-                white-space: normal !important;
-                line-height: 1.6 !important;
-                letter-spacing: 1px !important;
+                max-width: 80% !important;
+                max-height: 120px;
             }
 
             .video-overlay {
-                top: var(--m-video-top) !important;
-                left: var(--m-video-left) !important;
-                width: var(--m-video-width) !important;
-                height: var(--m-video-height) !important;
+                position: relative !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 95% !important;
+                height: auto !important;
+                aspect-ratio: 16 / 9;
+                margin: 0 auto;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+                border: 1px solid rgba(232, 186, 101, 0.3);
+                border-radius: 8px;
+                overflow: hidden;
+            }
+
+            .status-content {
+                position: relative !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                transform: none !important;
+                margin-top: 40px;
+                padding: 0 20px;
+                white-space: normal !important;
+            }
+
+            .status-text {
+                font-size: 1.5rem !important;
+                line-height: 1.4 !important;
+                letter-spacing: 1px !important;
+                text-shadow: 0 2px 10px rgba(0,0,0,0.5);
             }
         }
 
@@ -220,16 +246,15 @@
 
 <body>
     <div id="appWrapper" style="display: flex;">
-        <div id="mainBg" class="background-container" style="background-image: url('Images/videostream.png');">
-            <div class="branding-overlay live-mode" id="logoWrap">
+        <div id="mainBg" class="background-container" style="background-image: url('Images/thankyou for watching.png');">
+            <div class="branding-overlay" id="logoWrap">
                 <img src="Images/Truhome finance ignite logo.png" class="event-logo" alt="Ignite 2026">
             </div>
-            <div id="statusContent" class="status-content" style="display: none;">
-                <h1 id="statusText" class="status-text">EVENT WILL START @3:00PM ON 11TH APRIL, 2026</h1>
+            <div id="statusContent" class="status-content" style="display: block;">
+                <h1 id="statusText" class="status-text">THANK YOU FOR WATCHING</h1>
             </div>
             <div id="videoContainer" class="video-overlay">
-                <!-- Fallback Iframe for immediate load -->
-                <iframe src="https://vimeo.com/event/5861082/embed/interaction" allow="autoplay; fullscreen; picture-in-picture; encrypted-media; web-share" style="width:100%;height:100%;border:none;"></iframe>
+                <!-- No active stream -->
             </div>
         </div>
     </div>
